@@ -13,11 +13,11 @@
     <div v-show="!game">
       <div>
         名前:
-        <input type="text" v-model="name">
+        <input type="text" :value="name">
       </div>
       <div>
         起床時刻（5〜12時）:
-        <input type="number" v-model="getupTime" min="5" max="12">時
+        <input type="number" :value="getupTime" min="5" max="12">時
       </div>
       <button @click="gameStart">起床</button>
     </div>
@@ -35,10 +35,10 @@
         排尿感: {{status.toilet}}% {{flag}}
       </div>
       <div></div>
-      <button v-for="action in actions" @click="action.command">{{action.text}}</button>
+      <button v-for="(value, index) in actions" @click="action(index)">{{value.text}}</button>
 
       <div>
-        <div v-for="action in actions">{{action.time}} {{action.action}}</div>
+        <div v-for="value in actionHistory">{{action.time}} {{action.action}}</div>
       </div>
     </div>
     <div v-show="flag">ゲームオーバー</div>
@@ -56,22 +56,23 @@
         status: {
           satiety: 0,
           toilet: 50,
+          intelligence: 30,
+          sleep: 0,
         },
         actions: [
-          { command: 'eat', text: 'ご飯を食べる' },
-          { command: 'toilet', text: 'トイレに行く' },
-          { command: 'study', text: '勉強する' },
-          { command: 'game', text: 'ゲームする' },
-          { command: 'sleep', text: '昼寝する' },
-          { command: 'gameSet', text: '就寝' }
+          { text: 'ご飯を食べる', satiety: 100 },
+          { text: 'トイレに行く', toilet: -100 },
+          { text: '勉強する', intelligence: 10 },
+          { text: 'ゲームする', intelligence: -5 },
+          { text: '昼寝する', sleep: 1 },
+          { text: '就寝' }
         ],
         actionHistory: []
       },
       computed: {
         activityTime: function () {
-          return time - getupTime
+          return this.time - this.getupTime + this.status.sleep
         },
-
       },
       methods: {
         gameStart: function () {
@@ -86,6 +87,11 @@
           this.actionHistory.push({ time: this.time + "時", action: "ご飯を食べる" })
           this.spendTime()
           this.status.satiety += 10
+        },
+        action: function (index) {
+          const action = this.actions[index]
+          this.actionHistory.push({ time: this.time + "時", text: action.text })
+          this.spendTime()
         },
         toilet: function () {
           this.actionHistory.push({ time: this.time + "時", action: "トイレに行く" })
