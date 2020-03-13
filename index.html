@@ -29,13 +29,17 @@
         名前: {{name}}
       </div>
       <div>
-        満足感: {{status.satiety}}%
+        満腹感: {{status.satiety}}%
       </div>
       <div>
-        排尿感: {{status.toilet}}% {{flag}}
+        排尿感: {{status.toilet}}%
+      </div>
+      <div>
+        活動時間: {{activityTime}}時間
       </div>
       <div></div>
       <button v-for="(value, index) in actions" @click="action(index)">{{value.text}}</button>
+      <button @click="gameSet">就寝</button>
 
       <div>
         <div v-for="value in actionHistory">{{action.time}} {{action.action}}</div>
@@ -54,25 +58,32 @@
         time: 0,
         flag: false,
         status: {
-          satiety: 0,
+          satiety: 50,
           toilet: 50,
           intelligence: 30,
           sleep: 0,
         },
         actions: [
-          { text: 'ご飯を食べる', satiety: 100 },
-          { text: 'トイレに行く', toilet: -100 },
-          { text: '勉強する', intelligence: 10 },
-          { text: 'ゲームする', intelligence: -5 },
-          { text: '昼寝する', sleep: 1 },
-          { text: '就寝' }
+          { text: 'ご飯を食べる', satiety: 100, toilet: 0, intelligence: 0, sleep: 0 },
+          { text: 'トイレに行く', satiety: 0, toilet: -100, intelligence: 0, sleep: 0 },
+          { text: '勉強する', satiety: 0, toilet: 0, intelligence: 10, sleep: 0 },
+          { text: 'ゲームする', satiety: 0, toilet: 0, intelligence: -5, sleep: 0 },
+          { text: '昼寝する', satiety: 0, toilet: 0, intelligence: 0, sleep: 1 },
         ],
-        actionHistory: []
+        actionHistory: [],
+        result: {
+
+          comment: ''
+        }
       },
       computed: {
         activityTime: function () {
           return this.time - this.getupTime + this.status.sleep
         },
+        totalPoint: function () {
+          const status = this.status
+          return status.satiety + status.intelligence
+        }
       },
       methods: {
         gameStart: function () {
@@ -81,22 +92,17 @@
         },
         spendTime: function () {
           this.status.toilet += 10
+          this.status.satiety -= 10
           this.time += 1
-        },
-        eat: function () {
-          this.actionHistory.push({ time: this.time + "時", action: "ご飯を食べる" })
-          this.spendTime()
-          this.status.satiety += 10
         },
         action: function (index) {
           const action = this.actions[index]
           this.actionHistory.push({ time: this.time + "時", text: action.text })
           this.spendTime()
-        },
-        toilet: function () {
-          this.actionHistory.push({ time: this.time + "時", action: "トイレに行く" })
-          this.spendTime()
-          this.status.toilet = 0
+          this.status.satiety += action.satiety
+          this.status.toilet += action.toilet
+          this.status.intelligence += action.intelligence
+          this.status.sleep += action.sleep
         },
         gameSet: function () {
           if (confirm("就寝しますか？\n（ゲームを終了します）")) {
