@@ -55,6 +55,12 @@
         {{result.title}}<br>
         {{result.comment}}
         <div>
+          満腹感: {{status.satiety}}%<br>
+          かしこさ: {{status.intelligence}}<br>
+          たのしさ: {{status.fun}}<br>
+          活動時間: {{activityTime}}時間
+        </div>
+        <div>
           <div v-for="value in actionHistory">{{value.time}} {{value.text}}</div>
         </div>
       </div>
@@ -79,14 +85,15 @@
           satiety: 50,
           toilet: 50,
           intelligence: 30,
+          fun: 0,
           sleep: 0,
         },
         actions: [
-          { text: 'ご飯を食べる', satiety: 100, toilet: 0, intelligence: 0, sleep: 0 },
-          { text: 'トイレに行く', satiety: 0, toilet: -100, intelligence: 0, sleep: 0 },
-          { text: '勉強する', satiety: 0, toilet: 0, intelligence: 10, sleep: 0 },
-          { text: 'ゲームする', satiety: 0, toilet: 0, intelligence: -5, sleep: 0 },
-          { text: '昼寝する', satiety: 0, toilet: 0, intelligence: 0, sleep: 1 },
+          { text: 'ご飯を食べる', satiety: 100, toilet: 0, intelligence: 0, fun: 10, sleep: 0 },
+          { text: 'トイレに行く', satiety: 0, toilet: -100, intelligence: 0, fun: 0, sleep: 0 },
+          { text: '勉強する', satiety: 0, toilet: 0, intelligence: 10, fun: 5, sleep: 0 },
+          { text: 'ゲームする', satiety: 0, toilet: 0, intelligence: -5, fun: 10, sleep: 0 },
+          { text: '昼寝する', satiety: 0, toilet: 0, intelligence: 0, fun: 0, sleep: 1 },
         ],
         actionHistory: [],
         result: {
@@ -120,12 +127,13 @@
           this.status.satiety += action.satiety
           this.status.toilet += action.toilet
           this.status.intelligence += action.intelligence
+          this.status.fun += action.fun
           this.status.sleep += action.sleep
         },
         setGame: function () {
           if (confirm("就寝しますか？\n（ゲームを終了します）")) {
             this.gameStatus = 'finish'
-            this.result.title = `あなたの１日は${totalPoint}点でした`
+            this.result.title = `あなたの１日は${this.totalPoint}点でした`
           }
         },
         gameOver: function () {
