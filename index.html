@@ -10,7 +10,7 @@
 <body>
   <div id="app">
     <h1>引きこもりの１日</h1>
-    <div v-show="!game">
+    <div v-show="gameStatus === 'yet'">
       <div>
         名前:
         <input type="text" :value="name">
@@ -19,9 +19,9 @@
         起床時刻（5〜12時）:
         <input type="number" :value="getupTime" min="5" max="12">時
       </div>
-      <button @click="gameStart">起床</button>
+      <button @click="startGame">起床</button>
     </div>
-    <div v-show="game">
+    <div v-show="gameStatus === 'moving'">
       <div>
         {{time}}時
       </div>
@@ -39,20 +39,31 @@
       </div>
       <div></div>
       <button v-for="(value, index) in actions" @click="action(index)">{{value.text}}</button>
-      <button @click="gameSet">就寝</button>
+      <button @click="setGame">就寝</button>
 
       <div>
         <div v-for="value in actionHistory">{{action.time}} {{action.action}}</div>
       </div>
     </div>
-    <div v-show="flag">ゲームオーバー</div>
+    <div v-show="gameStatus === 'finish'">
+      <div v-show="flag">
+        <h2>ゲームオーバー</h2>
+        {{result.comment}}
+      </div>
+      <div v-show="!flag">
+        <h2>おやすみなさい</h2>
+        <div>
+          <div v-for="value in actionHistory">{{value.time}} {{value.text}}</div>
+        </div>
+      </div>
+    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
   <script>
     new Vue({
       el: "#app",
       data: {
-        game: false,
+        gameStatus: 'yet',
         name: '名無しさん',
         getupTime: 5,
         time: 0,
@@ -86,8 +97,8 @@
         }
       },
       methods: {
-        gameStart: function () {
-          this.game = true
+        startGame: function () {
+          this.gameStatus = 'moving'
           this.time = Number(this.getupTime)
         },
         spendTime: function () {
@@ -104,9 +115,9 @@
           this.status.intelligence += action.intelligence
           this.status.sleep += action.sleep
         },
-        gameSet: function () {
+        setGame: function () {
           if (confirm("就寝しますか？\n（ゲームを終了します）")) {
-            console.log('おやすみなさい')
+            this.gameStatus = 'finish'
           }
         }
       },
@@ -114,7 +125,7 @@
         'status.toilet': function () {
           if (this.status.toilet >= 100) {
             this.flag = true
-            this.status.toilet = 100
+            this.gameStatus = "finish"
             this.result.comment = `${this.name}は粗相してしまいました`
           } else if (this.status.toilet <= 0) {
             this.status.toilet = 0
@@ -125,7 +136,7 @@
             this.status.satiety = 100
           } else if (this.status.satiety <= 0) {
             this.flag = true
-            this.status.satiety = 0
+            this.gameStatus = "finish"
             this.result.comment = `${this.name}は餓死してしまいました`
           }
         },
