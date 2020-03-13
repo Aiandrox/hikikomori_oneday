@@ -61,7 +61,12 @@
           活動時間: {{activityTime}}時間
         </div>
         <div>
-          <div v-for="value in actionHistory">{{value.time}} {{value.text}}</div>
+          <table>
+            <tr v-for="value in actionHistory">
+              <th>{{value.time}}</th>
+              <td>{{value.text}}</td>
+            </tr>
+          </table>
         </div>
       </div>
       <div>
@@ -73,6 +78,7 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
   <script>
+
     new Vue({
       el: "#app",
       data: {
@@ -84,15 +90,15 @@
         status: {
           satiety: 50,
           toilet: 50,
-          intelligence: 30,
+          intelligence: 20,
           fun: 0,
           sleep: 0,
         },
         actions: [
           { text: 'ご飯を食べる', satiety: 100, toilet: 0, intelligence: 0, fun: 10, sleep: 0 },
           { text: 'トイレに行く', satiety: 0, toilet: -100, intelligence: 0, fun: 0, sleep: 0 },
-          { text: '勉強する', satiety: 0, toilet: 0, intelligence: 10, fun: 5, sleep: 0 },
-          { text: 'ゲームする', satiety: 0, toilet: 0, intelligence: -5, fun: 10, sleep: 0 },
+          { text: '勉強する', satiety: 0, toilet: 0, intelligence: 8, fun: 5, sleep: 0 },
+          { text: 'ゲームする', satiety: 0, toilet: 0, intelligence: -10, fun: 5, sleep: 0 },
           { text: '昼寝する', satiety: 0, toilet: 0, intelligence: 0, fun: 0, sleep: 1 },
         ],
         actionHistory: [],
@@ -108,6 +114,9 @@
         totalPoint: function () {
           const status = this.status
           return Math.floor((status.satiety + status.intelligence + status.fun) * 0.7)
+        },
+        tweetText: function () {
+          return `${this.result.title} ${this.result.comment}`
         }
       },
       methods: {
@@ -126,14 +135,21 @@
           this.spendTime()
           this.status.satiety += action.satiety
           this.status.toilet += action.toilet
-          this.status.intelligence += action.intelligence
-          this.status.fun += action.fun
+          this.status.intelligence += this.randNum(action.intelligence)
+          this.status.fun += this.randNum(action.fun)
           this.status.sleep += action.sleep
+        },
+        randNum: function (number) {
+          if (number = null) {
+            return 0
+          } else {
+            return Math.floor(Math.random() * (number - 10 + 1) + 10)
+          }
         },
         setGame: function () {
           if (confirm("就寝しますか？\n（ゲームを終了します）")) {
             this.gameStatus = 'finish'
-            this.result.title = `あなたの１日は${this.totalPoint}点でした`
+            this.result.title = `${this.name}の１日は${this.totalPoint}点でした。`
           }
         },
         gameOver: function () {
@@ -146,7 +162,7 @@
         'status.toilet': function () {
           if (this.status.toilet >= 100) {
             this.gameOver()
-            this.result.comment = `${this.name}は粗相してしまいました`
+            this.result.comment = `${this.name}は粗相してしまいました。`
           } else if (this.status.toilet <= 0) {
             this.status.toilet = 0
           }
@@ -156,13 +172,13 @@
             this.status.satiety = 100
           } else if (this.status.satiety <= 0) {
             this.gameOver()
-            this.result.comment = `${this.name}は餓死してしまいました`
+            this.result.comment = `${this.name}は餓死してしまいました。`
           }
         },
         activityTime: function () {
           if (this.activityTime >= 20) {
             this.gameOver()
-            this.result.comment = `${this.name}は疲れて眠ってしまいました`
+            this.result.comment = `${this.name}は疲れて眠ってしまいました。`
           }
         }
       }
