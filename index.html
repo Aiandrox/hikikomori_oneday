@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>Vue.js</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+  <div id="app">
+
+    <div v-show="!game">
+      <div>
+        名前:
+        <input type="text" v-model="name">
+      </div>
+      <div>
+        何時に起きますか？:
+        <input type="integer" v-model="getupTime">時
+      </div>
+      <button @click="gameStart">起床</button>
+    </div>
+    <div v-show="game">
+      <div>
+        {{time}}時
+      </div>
+      <div>
+        名前: {{name}}
+      </div>
+      <div>
+        満足感: {{status.satiety}}%
+      </div>
+      <div>
+        トイレ行きたい感: {{status.toilet}}% {{flag}}
+      </div>
+
+      <button @click="eat">ご飯を食べる</button>
+      <button @click="toilet">トイレに行く</button>
+      <button @click="gameSet">寝る</button>
+      <div>
+        <div v-for="action in actions">{{action.time}} {{action.action}}</div>
+      </div>
+    </div>
+    <div v-show="flag">ゲームオーバー</div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+  <script>
+    new Vue({
+      el: "#app",
+      data: {
+        game: false,
+        name: 'aaa',
+        getupTime: 0,
+        time: 0,
+        flag: false,
+        status: {
+          satiety: 0,
+          toilet: 50,
+        },
+        actions: []
+      },
+      computed: {
+        activityTime: function () {
+          return time - getupTime
+        },
+
+      },
+      methods: {
+        gameStart: function () {
+          this.game = true
+          this.time = Number(this.getupTime)
+        },
+        spendTime: function () {
+          this.status.toilet += 10
+          this.time += 1
+        },
+        eat: function () {
+          this.spendTime()
+          this.status.satiety += 10
+          this.actions.push({ time: this.time + "時", action: "ご飯を食べる" })
+        },
+        toilet: function () {
+          this.spendTime()
+          this.status.toilet = 0
+          this.actions.push({ time: this.time + "時", action: "トイレに行く" })
+        },
+        gameSet: function () {
+
+        }
+      },
+      watch: {
+        'status.toilet': function () {
+          let toilet = this.status.toilet
+          if (toilet >= 100) {
+            this.flag = true
+            return 100
+          } else {
+            return toilet
+          }
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
