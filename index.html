@@ -37,6 +37,8 @@
       <div>
         活動時間: {{activityTime}}時間
       </div>
+      かしこさ: {{status.intelligence}}<br>
+      たのしさ: {{status.fun}}<br>
       <div></div>
       <button v-for="(value, index) in actions" @click="action(index)">{{value.text}}</button>
       <button @click="setGame">就寝</button>
@@ -98,7 +100,7 @@
           { text: 'トイレに行く', satiety: 0, toilet: -100, intelligence: 0, fun: 0, sleep: 0 },
           { text: '勉強する', satiety: 0, toilet: 0, intelligence: 8, fun: 5, sleep: 0 },
           { text: 'ゲームする', satiety: 0, toilet: 0, intelligence: -10, fun: 5, sleep: 0 },
-          { text: '昼寝する', satiety: 0, toilet: 0, intelligence: 0, fun: 0, sleep: 1 },
+          { text: '昼寝する', satiety: 0, toilet: 0, intelligence: -3, fun: 0, sleep: 1 },
         ],
         actionHistory: [],
         result: {
@@ -120,8 +122,10 @@
       },
       methods: {
         startGame: function () {
-          this.gameStatus = 'moving'
-          this.time = Number(this.getupTime)
+          if (confirm(`${this.name}は${this.getupTime}時に起きますか？\n（ゲームを開始します）`)) {
+            this.gameStatus = 'moving'
+            this.time = Number(this.getupTime)
+          }
         },
         spendTime: function () {
           this.status.toilet += 10
@@ -149,7 +153,43 @@
           if (confirm("就寝しますか？\n（ゲームを終了します）")) {
             this.gameStatus = 'finish'
             this.result.title = `${this.name}の１日は${this.totalPoint}点でした。`
+            this.setResultComment()
           }
+        },
+        number: function (actionText) {
+          return this.actionHistory.filter((item, index) => {
+            if (item.text === actionText) return true;
+          }).length
+        },
+        setResultComment: function () {
+          const comments = []
+          const numberOfEat = this.number("ご飯を食べる")
+          const numberOfToilet = this.number("トイレに行く")
+          const numberOfStudy = this.number("勉強をする")
+          const numberOfGame = this.number("ゲームをする")
+          if (this.activityTime > 15) {
+            comments.push("充実した１日でした。")
+          } else if (this.status.sleep > 3) {
+            comments.push("寝すぎです。")
+          } else if (this.getupTime < 7 && 19 <= this.time && this.time <= 22) {
+            comments.push("いい生活習慣です。")
+          }
+          if (numberOfStudy > 5) {
+            comments.push("たくさん勉強をしました。")
+          }
+          if (numberOfGame > 5) {
+            comments.push("たくさんゲームをしました。")
+          }
+          if (numberOfEat > 5) {
+            comments.push("少しご飯を食べ過ぎです。")
+          }
+          if (numberOfToilet > 5) {
+            comments.push("頻尿のようです。")
+          }
+          if (comments.length === 0) {
+            comments.push("特に何も成し遂げずに１日を終えました。")
+          }
+          this.result.comment = comments.join()
         },
         gameOver: function () {
           this.flag = true
