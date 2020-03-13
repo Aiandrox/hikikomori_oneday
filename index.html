@@ -107,7 +107,7 @@
         },
         totalPoint: function () {
           const status = this.status
-          return status.satiety + status.intelligence
+          return Math.floor((status.satiety + status.intelligence + status.fun) * 0.7)
         }
       },
       methods: {
