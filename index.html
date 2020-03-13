@@ -103,7 +103,7 @@
       },
       computed: {
         activityTime: function () {
-          return this.time - this.getupTime + this.status.sleep
+          return this.time - this.getupTime - this.status.sleep
         },
         totalPoint: function () {
           const status = this.status
@@ -162,7 +162,7 @@
         activityTime: function () {
           if (this.activityTime >= 20) {
             this.gameOver()
-            this.result.comment = `${this.name}は眠ってしまいました`
+            this.result.comment = `${this.name}は疲れて眠ってしまいました`
           }
         }
       }
