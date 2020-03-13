@@ -35,9 +35,8 @@
         排尿感: {{status.toilet}}% {{flag}}
       </div>
       <div></div>
-      <button @click="eat">ご飯を食べる</button>
-      <button @click="toilet">トイレに行く</button>
-      <button @click="gameSet">就寝</button>
+      <button v-for="action in actions" @click="action.command">{{action.text}}</button>
+
       <div>
         <div v-for="action in actions">{{action.time}} {{action.action}}</div>
       </div>
@@ -58,7 +57,15 @@
           satiety: 0,
           toilet: 50,
         },
-        actions: []
+        actions: [
+          { command: 'eat', text: 'ご飯を食べる' },
+          { command: 'toilet', text: 'トイレに行く' },
+          { command: 'study', text: '勉強する' },
+          { command: 'game', text: 'ゲームする' },
+          { command: 'sleep', text: '昼寝する' },
+          { command: 'gameSet', text: '就寝' }
+        ],
+        actionHistory: []
       },
       computed: {
         activityTime: function () {
@@ -76,12 +83,12 @@
           this.time += 1
         },
         eat: function () {
-          this.actions.push({ time: this.time + "時", action: "ご飯を食べる" })
+          this.actionHistory.push({ time: this.time + "時", action: "ご飯を食べる" })
           this.spendTime()
           this.status.satiety += 10
         },
         toilet: function () {
-          this.actions.push({ time: this.time + "時", action: "トイレに行く" })
+          this.actionHistory.push({ time: this.time + "時", action: "トイレに行く" })
           this.spendTime()
           this.status.toilet = 0
         },
