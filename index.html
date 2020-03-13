@@ -52,12 +52,21 @@
       </div>
       <div v-show="!flag">
         <h2>おやすみなさい</h2>
+        {{result.title}}<br>
+        {{result.comment}}
         <div>
           <div v-for="value in actionHistory">{{value.time}} {{value.text}}</div>
         </div>
       </div>
+      <div>
+        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="ああああああ"
+          data-url="https://aiandrox.github.io/hikikomori_oneday/" data-hashtags="ひきこもりの１日" data-lang="ja"
+          data-show-count="false">結果をTweetする</a>
+
+      </div>
     </div>
   </div>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
   <script>
     new Vue({
@@ -83,8 +92,8 @@
         ],
         actionHistory: [],
         result: {
-
-          comment: ''
+          title: '',
+          comment: '',
         }
       },
       computed: {
@@ -118,14 +127,19 @@
         setGame: function () {
           if (confirm("就寝しますか？\n（ゲームを終了します）")) {
             this.gameStatus = 'finish'
+            this.result.title = `あなたの１日は${totalPoint}点でした`
           }
+        },
+        gameOver: function () {
+          this.flag = true
+          this.gameStatus = "finish"
+          this.result.title = "ゲームオーバー"
         }
       },
       watch: {
         'status.toilet': function () {
           if (this.status.toilet >= 100) {
-            this.flag = true
-            this.gameStatus = "finish"
+            this.gameOver()
             this.result.comment = `${this.name}は粗相してしまいました`
           } else if (this.status.toilet <= 0) {
             this.status.toilet = 0
@@ -135,14 +149,13 @@
           if (this.status.satiety >= 100) {
             this.status.satiety = 100
           } else if (this.status.satiety <= 0) {
-            this.flag = true
-            this.gameStatus = "finish"
+            this.gameOver()
             this.result.comment = `${this.name}は餓死してしまいました`
           }
         },
         activityTime: function () {
           if (this.activityTime >= 20) {
-            this.flag = true
+            this.gameOver()
             this.result.comment = `${this.name}は眠ってしまいました`
           }
         }
