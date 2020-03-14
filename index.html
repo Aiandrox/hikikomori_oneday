@@ -41,9 +41,7 @@
             <img src="human.jpg">
           </div>
           <div class="status">
-            <div class="clock">
-              {{viewTime}}
-            </div>
+            <div class="clock">{{viewTime}}</div>
             満腹感 <div class="graph-wrapper">
               <div class="graph-body satiety" :style="{ width: status.satiety + '%' }"></div>
             </div>
@@ -69,12 +67,13 @@
       <!-- 結果画面 -->
       <div v-if="gameStatus === 'result'">
         <div v-show="flag">
-          <h2>{{result.title}}</h2>
-          {{result.comment}}
+          <h2>ゲームオーバー</h2>
+          <div class="comment">{{result.comment}}</div>
+          <img src="gameover.jpg">
         </div>
         <div v-show="!flag">
           <h2>{{name}}の１日は<span class="point">{{totalPoint}}点</span>でした。</h2>
-          {{result.comment}}
+          <div class="comment">{{result.comment}}</div>
           <div>
             かしこさ: {{status.intelligence}}<br>
             たのしさ: {{status.fun}}<br>
@@ -89,7 +88,6 @@
       </div>
       <div v-if="gameStatus === 'history'">
         <h2>{{name}}の１日は<span class="point">{{totalPoint}}点</span>でした。</h2>
-        活動記録
         <table>
           <tr v-for="value in actionHistory">
             <th>{{value.time}}</th>
@@ -152,7 +150,7 @@
           return point
         },
         url: function () {
-          const text = `${this.result.title} ${this.result.comment}`
+          const text = `${this.result.title}${this.result.comment}`
           return `https://twitter.com/intent/tweet?hashtags=ひきこもりのいちにち,web1week&url=https://aiandrox.github.io/hikikomori_oneday/&text=${text}`
         }
       },
@@ -233,7 +231,7 @@
         gameOver: function () {
           this.flag = true
           this.gameStatus = "result"
-          this.result.title = "ゲームオーバーになりました。"
+          this.result.title = `${this.name}はゲームオーバーになりました。`
         },
         resetGame: () => {
           Object.assign(app.$data, app.$options.data())
@@ -243,7 +241,7 @@
         'status.toilet': function () {
           if (this.status.toilet >= 100) {
             this.gameOver()
-            this.result.comment = `${this.name}は粗相してしまいました。`
+            this.result.comment = `粗相してしまいました。`
           } else if (this.status.toilet <= 0) {
             this.status.toilet = 0
           }
@@ -253,13 +251,13 @@
             this.status.satiety = 100
           } else if (this.status.satiety <= 0) {
             this.gameOver()
-            this.result.comment = `${this.name}はお腹が空いて倒れてしまいました。`
+            this.result.comment = `お腹が空いて倒れてしまいました。`
           }
         },
         activityTime: function () {
           if (this.activityTime >= 20) {
             this.gameOver()
-            this.result.comment = `${this.name}は疲れて眠ってしまいました。`
+            this.result.comment = `疲れて眠ってしまいました。`
           }
         }
       }
