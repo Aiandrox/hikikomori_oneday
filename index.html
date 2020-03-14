@@ -18,15 +18,15 @@
       </div>
       <div>
         名前:
-        <input type="text" :value="name"><br>
+        <input type="text" v-model="name"><br>
         起床時刻（5〜12時）:
-        <input type="number" :value="getupTime" min="5" max="12">時
+        <input type="number" v-model="getupTime" min="5" max="12">時
       </div>
       <button @click="startGame">起床</button>
     </div>
     <div v-if="gameStatus === 'moving'">
       <div>
-        {{time}}時
+        {{viewTime}}
       </div>
       <div>
         名前: {{name}}
@@ -121,6 +121,14 @@
         activityTime: function () {
           return this.time - this.getupTime - this.status.sleep
         },
+        viewTime: function () {
+          if (this.time >= 24) {
+            const time = this.time - 24
+            return `次の日の${time}時`
+          } else {
+            return `${this.time}時`
+          }
+        },
         totalPoint: function () {
           const status = this.status
           const point = Math.floor((status.satiety + status.intelligence + status.fun) * 0.7)
@@ -147,7 +155,7 @@
         },
         action: function (index) {
           const action = this.actions[index]
-          this.actionHistory.push({ time: this.time + "時", text: action.text })
+          this.actionHistory.push({ time: this.viewTime, text: action.text })
           this.spendTime()
           this.status.satiety += action.satiety
           this.status.toilet += action.toilet
@@ -166,7 +174,7 @@
         setGame: function () {
           if (confirm("就寝しますか？\n（ゲームを終了します）")) {
             this.gameStatus = 'finish'
-            this.result.title = `${this.name}の１日は${this.totalPoint}点でした。`
+            this.result.title = `${this.name}の１日は${this.totalPoint}点です。`
             this.setResultComment()
           }
         },
