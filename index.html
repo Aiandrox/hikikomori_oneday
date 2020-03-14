@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="ress.css">
   <link rel="stylesheet" href="main.css">
   <link href="https://fonts.googleapis.com/css?family=M+PLUS+1p" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 </head>
 
 <body>
@@ -33,29 +35,27 @@
 
       <!-- ゲーム画面 -->
       <div v-if="gameStatus === 'moving'">
-        <div>
-          名前: {{name}}
-        </div>
         <div class="wrapper">
           <div class="human">
+            <div class="name">{{name}}</div>
             <img src="human.jpg">
           </div>
           <div class="status">
-            <div>
+            <div class="clock">
               {{viewTime}}
             </div>
             満腹感 <div class="graph-wrapper">
               <div class="graph-body satiety" :style="{ width: status.satiety + '%' }"></div>
             </div>
+            <br>
             排尿感
             <div class="graph-wrapper">
               <div class="graph-body toilet" :style="{ width: status.toilet + '%' }"></div>
             </div>
+            <br>
             <div>
-              活動時間: {{activityTime}}時間
+              活動時間　<span class="point">{{activityTime}}時間</span>
             </div>
-            かしこさ: {{status.intelligence}}<br>
-            たのしさ: {{status.fun}}<br>
           </div>
         </div>
         <button class="button" v-for="(value, index) in actions" @click="action(index)">{{value.text}}</button>
