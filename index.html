@@ -63,8 +63,8 @@
           </div>
         </div>
         <button class="button" v-for="(value, index) in actions" @click="action(index)">{{value.text}}</button>
+        <br>
         <button class="button red" @click="setGame">就寝</button>
-
         <div>
           <div v-for="value in actionHistory">{{action.time}} {{action.action}}</div>
         </div>
@@ -208,6 +208,7 @@
         },
         setResultComment: function () {
           const comments = []
+          const numberOfAction = this.actionHistory.length
           const numberOfEat = this.number("ご飯を食べる")
           const numberOfToilet = this.number("トイレに行く")
           const numberOfStudy = this.number("勉強する")
@@ -222,13 +223,11 @@
           } else if (this.time < 17) {
             comments.push("随分と寝るのが早いですね。")
           }
-          if (numberOfStudy > 5) {
+          if (numberOfStudy > numberOfAction * 0.4) {
             comments.push("たくさん勉強をしました。")
-          }
-          if (numberOfGame > 5) {
+          } else if (numberOfGame > numberOfAction * 0.4) {
             comments.push("たくさんゲームをしました。")
-          }
-          if (numberOfTraining > 5) {
+          } else if (numberOfTraining > numberOfAction * 0.4) {
             comments.push("筋トレが好きなのはわかりました。")
           }
           if (numberOfEat > 5) {
