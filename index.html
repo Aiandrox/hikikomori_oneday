@@ -10,7 +10,7 @@
 <body>
   <div id="app">
     <h1>引きこもりの１日</h1>
-    <div v-show="gameStatus === 'yet'">
+    <div v-if="gameStatus === 'yet'">
       <div>
         名前:
         <input type="text" :value="name">
@@ -21,7 +21,7 @@
       </div>
       <button @click="startGame">起床</button>
     </div>
-    <div v-show="gameStatus === 'moving'">
+    <div v-if="gameStatus === 'moving'">
       <div>
         {{time}}時
       </div>
@@ -47,7 +47,7 @@
         <div v-for="value in actionHistory">{{action.time}} {{action.action}}</div>
       </div>
     </div>
-    <div v-show="gameStatus === 'finish'">
+    <div v-if="gameStatus === 'finish'">
       <div v-show="flag">
         <h2>ゲームオーバー</h2>
         {{result.comment}}
@@ -57,11 +57,11 @@
         {{result.title}}<br>
         {{result.comment}}
         <div>
-          満腹感: {{status.satiety}}%<br>
           かしこさ: {{status.intelligence}}<br>
           たのしさ: {{status.fun}}<br>
           活動時間: {{activityTime}}時間
         </div>
+        <a href="#">活動記録を見る</a>
         <div>
           <table>
             <tr v-for="value in actionHistory">
@@ -78,6 +78,7 @@
       </div>
     </div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
   <script>
     const app = new Vue({
@@ -98,9 +99,9 @@
         actions: [
           { text: 'ご飯を食べる', satiety: 100, toilet: 0, intelligence: 0, fun: 10, sleep: 0 },
           { text: 'トイレに行く', satiety: 0, toilet: -100, intelligence: 0, fun: 0, sleep: 0 },
-          { text: '勉強する', satiety: 0, toilet: 0, intelligence: 8, fun: 5, sleep: 0 },
-          { text: 'ゲームする', satiety: 0, toilet: 0, intelligence: -10, fun: 5, sleep: 0 },
-          { text: '昼寝する', satiety: 0, toilet: 0, intelligence: -3, fun: 0, sleep: 1 },
+          { text: '勉強する', satiety: 0, toilet: 0, intelligence: 13, fun: 5, sleep: 0 },
+          { text: 'ゲームする', satiety: 0, toilet: 0, intelligence: 5, fun: 10, sleep: 0 },
+          { text: '昼寝する', satiety: 0, toilet: 0, intelligence: 3, fun: 5, sleep: 1 },
         ],
         actionHistory: [],
         result: {
@@ -114,7 +115,11 @@
         },
         totalPoint: function () {
           const status = this.status
-          return Math.floor((status.satiety + status.intelligence + status.fun) * 0.7)
+          const point = Math.floor((status.satiety + status.intelligence + status.fun) * 0.7)
+          if (this.activityTime > 15) {
+            return Math.floor(point * 0.8)
+          }
+          return point
         },
         tweetText: function () {
           return `${this.result.title} ${this.result.comment}`
@@ -143,10 +148,11 @@
           this.status.sleep += action.sleep
         },
         randNum: function (number) {
-          if (number = null) {
+          if (number === 0) {
             return 0
           } else {
-            return Math.floor(Math.random() * (number - 10 + 1) + 10)
+            min = number - 10
+            return Math.floor(Math.random() * (number - min + 1) + min)
           }
         },
         setGame: function () {
@@ -165,8 +171,8 @@
           const comments = []
           const numberOfEat = this.number("ご飯を食べる")
           const numberOfToilet = this.number("トイレに行く")
-          const numberOfStudy = this.number("勉強をする")
-          const numberOfGame = this.number("ゲームをする")
+          const numberOfStudy = this.number("勉強する")
+          const numberOfGame = this.number("ゲームする")
           if (this.activityTime > 15) {
             comments.push("充実した１日でした。")
           } else if (this.status.sleep > 3) {
@@ -189,7 +195,7 @@
           if (comments.length === 0) {
             comments.push("特に何も成し遂げずに１日を終えました。")
           }
-          this.result.comment = comments.join()
+          this.result.comment = comments.join('')
         },
         gameOver: function () {
           this.flag = true
@@ -214,7 +220,7 @@
             this.status.satiety = 100
           } else if (this.status.satiety <= 0) {
             this.gameOver()
-            this.result.comment = `${this.name}は餓死してしまいました。`
+            this.result.comment = `${this.name}はお腹が空いて倒れてしまいました。`
           }
         },
         activityTime: function () {
