@@ -3,19 +3,21 @@
 
 <head>
   <meta charset="utf-8">
-  <title>引きこもりの１日</title>
+  <title>ひきこもりのいちにち</title>
   <link rel="stylesheet" href="main.css">
+  <link href="https://fonts.googleapis.com/css?family=M+PLUS+1p" rel="stylesheet">
 </head>
 
 <body>
   <div id="app">
-    <h1>引きこもりの１日</h1>
+    <h1>ひきこもりのいちにち</h1>
     <div v-if="gameStatus === 'yet'">
-      <div>
-        名前:
-        <input type="text" :value="name">
+      <div class="img-area">
+        <img src="./sleeping.jpg">
       </div>
       <div>
+        名前:
+        <input type="text" :value="name"><br>
         起床時刻（5〜12時）:
         <input type="number" :value="getupTime" min="5" max="12">時
       </div>
@@ -27,6 +29,9 @@
       </div>
       <div>
         名前: {{name}}
+      </div>
+      <div>
+        <img src="human.jpg">
       </div>
       満腹感
       <div class="graph-wrapper">
@@ -75,7 +80,7 @@
       </div>
       <div>
         <a
-          href="https://twitter.com/intent/tweet?text=てきすと&hashtags=ひきこもりの１日&url=https://aiandrox.github.io/hikikomori_oneday/">結果をTweetする</a>
+          href="https://twitter.com/intent/tweet?text=てきすと&hashtags=ひきこもりのいちにち&url=https://aiandrox.github.io/hikikomori_oneday/">結果をTweetする</a>
         <button @click="resetGame">リトライ</button>
       </div>
     </div>

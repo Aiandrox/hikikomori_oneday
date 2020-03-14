@@ -1,3 +1,21 @@
+body {
+  background-color: #b5d197;
+}
+img {
+  width: 100%;
+}
+
+#app {
+  background-color: #ffffff;
+  padding: 20px;
+  max-width: 100%;
+  width: 500px;
+  margin: auto;
+}
+h1 {
+  font-family: "M PLUS 1p";
+  text-align: center;
+}
 .graph-wrapper {
   max-width: 100%;
   width: 300px;
@@ -12,4 +30,9 @@
 }
 .toilet {
   background-color: cadetblue;
+}
+.img-area {
+  margin: auto;
+  max-width: 300px;
+  text-align: center;
 }
