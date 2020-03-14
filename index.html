@@ -181,6 +181,8 @@
             comments.push("寝すぎです。")
           } else if (this.getupTime < 7 && 19 <= this.time && this.time <= 22) {
             comments.push("いい生活習慣です。")
+          } else if (this.time < 17) {
+            comments.push("随分と寝るのが早いですね。")
           }
           if (numberOfStudy > 5) {
             comments.push("たくさん勉強をしました。")
@@ -189,10 +191,10 @@
             comments.push("たくさんゲームをしました。")
           }
           if (numberOfEat > 5) {
-            comments.push("少しご飯を食べ過ぎです。")
+            comments.push("食事回数が多すぎです。")
           }
           if (numberOfToilet > 5) {
-            comments.push("頻尿のようです。")
+            comments.push("少し頻尿のようです。")
           }
           if (comments.length === 0) {
             comments.push("特に何も成し遂げずに１日を終えました。")
