@@ -73,7 +73,7 @@
       <!-- 結果画面 -->
       <div v-if="gameStatus === 'result'">
         <div v-show="flag">
-          <h2>ゲームオーバー</h2>
+          <h2>{{result.title}}</h2>
           <div class="comment">{{result.comment}}</div>
           <img src="gameover.jpg">
         </div>
@@ -244,7 +244,7 @@
         gameOver: function () {
           this.flag = true
           this.gameStatus = "result"
-          this.result.title = `${this.name}はゲームオーバーになりました。`
+          this.result.comment = `${this.name}はゲームオーバーになりました。`
         },
         resetGame: () => {
           Object.assign(app.$data, app.$options.data())
@@ -254,7 +254,7 @@
         'status.toilet': function () {
           if (this.status.toilet >= 100) {
             this.gameOver()
-            this.result.comment = `粗相してしまいました。`
+            this.result.title = `粗相してしまいました。`
           } else if (this.status.toilet <= 0) {
             this.status.toilet = 0
           }
@@ -264,13 +264,13 @@
             this.status.satiety = 100
           } else if (this.status.satiety <= 0) {
             this.gameOver()
-            this.result.comment = `お腹が空いて倒れてしまいました。`
+            this.result.title = `お腹が空いて倒れてしまいました。`
           }
         },
         activityTime: function () {
           if (this.activityTime >= 20) {
             this.gameOver()
-            this.result.comment = `疲れて眠ってしまいました。`
+            this.result.title = `疲れて眠ってしまいました。`
           }
         }
       }
