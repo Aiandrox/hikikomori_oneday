@@ -1,8 +1,79 @@
 body {
   background-color: #b5d197;
 }
+a {
+  text-decoration: none;
+}
 img {
   width: 100%;
+}
+h1 {
+  font-family: "M PLUS 1p";
+  text-align: center;
+  margin: 0.5em 1em 1em 1em;
+}
+h2 {
+  font-weight: normal;
+  margin: 0.3em 0;
+}
+.point {
+  padding: 0 0.1em;
+  background: linear-gradient(transparent 80%, rgb(243, 144, 144) 70%);
+}
+
+/* インプットエリア */
+.input-area div {
+  margin: 0.5em 0;
+}
+.input-area button {
+  margin: auto;
+}
+input {
+	box-sizing: border-box;
+	padding: 0.3em 0.4em;
+  transition: 0.3s;
+  color: #888;
+	letter-spacing: 1px;
+	border: 1px solid #1f3f32;
+	border-radius: 4px;
+}
+input[type="number"] {
+  text-align: right;
+}
+input:focus {
+  color: #000;
+	border: 1px solid #285241;
+	outline: none;
+	box-shadow: 0 0 5px 1px #56884a;
+}
+
+/* ボタン */
+.button {
+  display: inline-block;
+  padding: 0.3em 1.5em;
+  color: #fff;
+  background-color: #90af6c;
+  border: 2px #90af6c solid;
+  border-radius: 20px;
+  margin: 2px;
+}
+.button:hover {
+  color: #90af6c;
+  background: #fff;
+}
+.twitter {
+  background-color: #6292ad;
+  border-color: #6292ad;
+}
+.twitter:hover {
+  color: #6292ad;
+}
+.red {
+  background: #B43C3C;
+  border-color: #B43C3C;
+}
+.red:hover {
+  color: #B43C3C;
 }
 
 #app {
@@ -10,15 +81,21 @@ img {
   padding: 20px;
   max-width: 100%;
   width: 500px;
-  margin: auto;
+  margin: 20px auto;
 }
-h1 {
-  font-family: "M PLUS 1p";
-  text-align: center;
+/* ステータスエリア */
+.wrapper {
+  display: -webkit-flex;
+  display: flex;
 }
+.human {
+  width: 150px;
+}
+
+/* グラフ */
 .graph-wrapper {
   max-width: 100%;
-  width: 300px;
+  width: 200px;
   height: 20px;
   background-color: #F1F3DA;
 }
@@ -31,6 +108,7 @@ h1 {
 .toilet {
   background-color: cadetblue;
 }
+
 .img-area {
   margin: auto;
   max-width: 300px;

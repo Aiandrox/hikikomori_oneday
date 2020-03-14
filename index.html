@@ -4,72 +4,82 @@
 <head>
   <meta charset="utf-8">
   <title>ひきこもりのいちにち</title>
-  <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="ress.css">
+  <link rel="stylesheet" href="main.css">
   <link href="https://fonts.googleapis.com/css?family=M+PLUS+1p" rel="stylesheet">
 </head>
 
 <body>
   <div id="app">
     <h1>ひきこもりのいちにち</h1>
+    <!-- 最初の画面 -->
     <div v-if="gameStatus === 'yet'">
       <div class="img-area">
         <img src="./sleeping.jpg">
       </div>
-      <div>
-        名前:
-        <input type="text" v-model="name"><br>
-        起床時刻（5〜12時）:
-        <input type="number" v-model="getupTime" min="5" max="12">時
+      <div class="input-area">
+        <div>
+          名前<br>
+          <input type="text" v-model="name">
+        </div>
+        <div>
+          起床時刻（5〜12時）<br>
+          <input type="number" v-model="getupTime" min="5" max="12">時
+        </div>
+        <button class="button" @click="startGame">起床</button>
       </div>
-      <button @click="startGame">起床</button>
     </div>
+
+    <!-- ゲーム画面 -->
     <div v-if="gameStatus === 'moving'">
-      <div>
-        {{viewTime}}
-      </div>
       <div>
         名前: {{name}}
       </div>
-      <div>
-        <img src="human.jpg">
+      <div class="wrapper">
+        <div class="human">
+          <img src="human.jpg">
+        </div>
+        <div class="status">
+          <div>
+            {{viewTime}}
+          </div>
+          満腹感 <div class="graph-wrapper">
+            <div class="graph-body satiety" :style="{ width: status.satiety + '%' }"></div>
+          </div>
+          排尿感
+          <div class="graph-wrapper">
+            <div class="graph-body toilet" :style="{ width: status.toilet + '%' }"></div>
+          </div>
+          <div>
+            活動時間: {{activityTime}}時間
+          </div>
+          かしこさ: {{status.intelligence}}<br>
+          たのしさ: {{status.fun}}<br>
+        </div>
       </div>
-      満腹感
-      <div class="graph-wrapper">
-        <div class="graph-body satiety" :style="{ width: status.satiety + '%' }"></div>
-      </div>
-      排尿感
-      <div class="graph-wrapper">
-        <div class="graph-body toilet" :style="{ width: status.toilet + '%' }"></div>
-      </div>
-      <div>
-        活動時間: {{activityTime}}時間
-      </div>
-      かしこさ: {{status.intelligence}}<br>
-      たのしさ: {{status.fun}}<br>
-      <div></div>
-      <button v-for="(value, index) in actions" @click="action(index)">{{value.text}}</button>
-      <button @click="setGame">就寝</button>
+      <button class="button" v-for="(value, index) in actions" @click="action(index)">{{value.text}}</button>
+      <button class="button red" @click="setGame">就寝</button>
 
       <div>
         <div v-for="value in actionHistory">{{action.time}} {{action.action}}</div>
       </div>
     </div>
+
+    <!-- 結果画面 -->
     <div v-if="gameStatus === 'finish'">
       <div v-show="flag">
-        <h2>ゲームオーバー</h2>
+        <h2>{{result.title}}</h2>
         {{result.comment}}
       </div>
       <div v-show="!flag">
-        <h2>おやすみなさい</h2>
-        {{result.title}}<br>
+        <h2>{{name}}の１日は<span class="point">{{totalPoint}}点</span>でした。</h2>
         {{result.comment}}
         <div>
           かしこさ: {{status.intelligence}}<br>
           たのしさ: {{status.fun}}<br>
           活動時間: {{activityTime}}時間
         </div>
-        <a href="#">活動記録を見る</a>
+        <a class="button" href="#">活動記録を見る</a>
         <div>
           <table>
             <tr v-for="value in actionHistory">
@@ -80,9 +90,9 @@
         </div>
       </div>
       <div>
-        <a
+        <a class="button twitter"
           href="https://twitter.com/intent/tweet?text=てきすと&hashtags=ひきこもりのいちにち&url=https://aiandrox.github.io/hikikomori_oneday/">結果をTweetする</a>
-        <button @click="resetGame">リトライ</button>
+        <button class="button red" @click="resetGame">リトライ</button>
       </div>
     </div>
   </div>
@@ -94,7 +104,7 @@
       data: () => ({
         gameStatus: 'yet',
         name: '名無しさん',
-        getupTime: 5,
+        getupTime: 7,
         time: 0,
         flag: false,
         status: {
@@ -218,7 +228,7 @@
         gameOver: function () {
           this.flag = true
           this.gameStatus = "finish"
-          this.result.title = "ゲームオーバー"
+          this.result.title = "ゲームオーバーになりました。"
         },
         resetGame: () => {
           Object.assign(app.$data, app.$options.data())
