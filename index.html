@@ -11,95 +11,96 @@
 
 <body>
   <div id="app">
-    <h1>ひきこもりのいちにち</h1>
-    <!-- 最初の画面 -->
-    <div v-if="gameStatus === 'yet'">
-      <div class="img-area">
-        <img src="./sleeping.jpg">
-      </div>
-      <div class="input-area">
-        <div>
-          名前<br>
-          <input type="text" v-model="name">
+    <div id="main">
+      <h1>ひきこもりのいちにち</h1>
+      <!-- 最初の画面 -->
+      <div v-if="gameStatus === 'yet'">
+        <div class="img-area">
+          <img src="./sleeping.jpg">
         </div>
-        <div>
-          起床時刻（5〜12時）<br>
-          <input type="number" v-model="getupTime" min="5" max="12">時
+        <div class="input-area">
+          <div>
+            名前<br>
+            <input type="text" v-model="name">
+          </div>
+          <div>
+            起床時刻（5〜12時）<br>
+            <input type="number" v-model="getupTime" min="5" max="12">時
+          </div>
+          <button class="button" @click="startGame">起床</button>
         </div>
-        <button class="button" @click="startGame">起床</button>
       </div>
-    </div>
 
-    <!-- ゲーム画面 -->
-    <div v-if="gameStatus === 'moving'">
-      <div>
-        名前: {{name}}
-      </div>
-      <div class="wrapper">
-        <div class="human">
-          <img src="human.jpg">
+      <!-- ゲーム画面 -->
+      <div v-if="gameStatus === 'moving'">
+        <div>
+          名前: {{name}}
         </div>
-        <div class="status">
+        <div class="wrapper">
+          <div class="human">
+            <img src="human.jpg">
+          </div>
+          <div class="status">
+            <div>
+              {{viewTime}}
+            </div>
+            満腹感 <div class="graph-wrapper">
+              <div class="graph-body satiety" :style="{ width: status.satiety + '%' }"></div>
+            </div>
+            排尿感
+            <div class="graph-wrapper">
+              <div class="graph-body toilet" :style="{ width: status.toilet + '%' }"></div>
+            </div>
+            <div>
+              活動時間: {{activityTime}}時間
+            </div>
+            かしこさ: {{status.intelligence}}<br>
+            たのしさ: {{status.fun}}<br>
+          </div>
+        </div>
+        <button class="button" v-for="(value, index) in actions" @click="action(index)">{{value.text}}</button>
+        <button class="button red" @click="setGame">就寝</button>
+
+        <div>
+          <div v-for="value in actionHistory">{{action.time}} {{action.action}}</div>
+        </div>
+      </div>
+
+      <!-- 結果画面 -->
+      <div v-if="gameStatus === 'result'">
+        <div v-show="flag">
+          <h2>{{result.title}}</h2>
+          {{result.comment}}
+        </div>
+        <div v-show="!flag">
+          <h2>{{name}}の１日は<span class="point">{{totalPoint}}点</span>でした。</h2>
+          {{result.comment}}
           <div>
-            {{viewTime}}
-          </div>
-          満腹感 <div class="graph-wrapper">
-            <div class="graph-body satiety" :style="{ width: status.satiety + '%' }"></div>
-          </div>
-          排尿感
-          <div class="graph-wrapper">
-            <div class="graph-body toilet" :style="{ width: status.toilet + '%' }"></div>
-          </div>
-          <div>
+            かしこさ: {{status.intelligence}}<br>
+            たのしさ: {{status.fun}}<br>
             活動時間: {{activityTime}}時間
           </div>
-          かしこさ: {{status.intelligence}}<br>
-          たのしさ: {{status.fun}}<br>
+          <a class="button" @click.prevent="gameStatus = 'history'" href="#">活動記録を見る</a>
         </div>
-      </div>
-      <button class="button" v-for="(value, index) in actions" @click="action(index)">{{value.text}}</button>
-      <button class="button red" @click="setGame">就寝</button>
-
-      <div>
-        <div v-for="value in actionHistory">{{action.time}} {{action.action}}</div>
-      </div>
-    </div>
-
-    <!-- 結果画面 -->
-    <div v-if="gameStatus === 'finish'">
-      <div v-show="flag">
-        <h2>{{result.title}}</h2>
-        {{result.comment}}
-      </div>
-      <div v-show="!flag">
-        <h2>{{name}}の１日は<span class="point">{{totalPoint}}点</span>でした。</h2>
-        {{result.comment}}
         <div>
-          かしこさ: {{status.intelligence}}<br>
-          たのしさ: {{status.fun}}<br>
-          活動時間: {{activityTime}}時間
+          <a class="button twitter" :href="url">結果をTweetする</a>
+          <button class="button red" @click="resetGame">リトライ</button>
         </div>
-        <a class="button" @click.prevent="gameStatus = 'history'" href="#">活動記録を見る</a>
       </div>
-      <div>
-        <a class="button twitter" :href="url">結果をTweetする</a>
-        <button class="button red" @click="resetGame">リトライ</button>
+      <div v-if="gameStatus === 'history'">
+        <h2>{{name}}の１日は<span class="point">{{totalPoint}}点</span>でした。</h2>
+        活動記録
+        <table>
+          <tr v-for="value in actionHistory">
+            <th>{{value.time}}</th>
+            <td>{{value.text}}</td>
+          </tr>
+        </table>
+        <a class="button" @click.prevent="gameStatus = 'result'" href="#">結果に戻る</a>
       </div>
-    </div>
-    <div v-if="gameStatus === 'history'">
-      <h2>{{name}}の１日は<span class="point">{{totalPoint}}点</span>でした。</h2>
-      活動記録
-      <table>
-        <tr v-for="value in actionHistory">
-          <th>{{value.time}}</th>
-          <td>{{value.text}}</td>
-        </tr>
-      </table>
-      <a class="button" @click.prevent="gameStatus = 'result'" href="#">結果に戻る</a>
-
-    </div>
-  </div>
-
+    </div><!-- #main -->
+    <div id="attention">更新ボタンを押すとデータが消えるのでご注意ください。</div>
+  </div><!-- #app -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
   <script>
     const app = new Vue({
@@ -187,7 +188,7 @@
         },
         setGame: function () {
           if (confirm("就寝しますか？\n（ゲームを終了します）")) {
-            this.gameStatus = 'finish'
+            this.gameStatus = 'result'
             this.result.title = `${this.name}の１日は${this.totalPoint}点です。`
             this.setResultComment()
           }
@@ -231,7 +232,7 @@
         },
         gameOver: function () {
           this.flag = true
-          this.gameStatus = "finish"
+          this.gameStatus = "result"
           this.result.title = "ゲームオーバーになりました。"
         },
         resetGame: () => {
