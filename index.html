@@ -28,11 +28,13 @@
       <div>
         名前: {{name}}
       </div>
-      <div>
-        満腹感: {{status.satiety}}%
+      満腹感
+      <div class="graph-wrapper">
+        <div class="graph-body satiety" :style="{ width: status.satiety + '%' }"></div>
       </div>
-      <div>
-        排尿感: {{status.toilet}}%
+      排尿感
+      <div class="graph-wrapper">
+        <div class="graph-body toilet" :style="{ width: status.toilet + '%' }"></div>
       </div>
       <div>
         活動時間: {{activityTime}}時間
