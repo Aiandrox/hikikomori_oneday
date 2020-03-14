@@ -79,21 +79,24 @@
           たのしさ: {{status.fun}}<br>
           活動時間: {{activityTime}}時間
         </div>
-        <a class="button" href="#">活動記録を見る</a>
-        <div>
-          <table>
-            <tr v-for="value in actionHistory">
-              <th>{{value.time}}</th>
-              <td>{{value.text}}</td>
-            </tr>
-          </table>
-        </div>
+        <a class="button" @click.prevent="gameStatus = 'history'" href="#">活動記録を見る</a>
       </div>
       <div>
-        <a class="button twitter"
-          href="https://twitter.com/intent/tweet?text=てきすと&hashtags=ひきこもりのいちにち&url=https://aiandrox.github.io/hikikomori_oneday/">結果をTweetする</a>
+        <a class="button twitter" :href="url">結果をTweetする</a>
         <button class="button red" @click="resetGame">リトライ</button>
       </div>
+    </div>
+    <div v-if="gameStatus === 'history'">
+      <h2>{{name}}の１日は<span class="point">{{totalPoint}}点</span>でした。</h2>
+      活動記録
+      <table>
+        <tr v-for="value in actionHistory">
+          <th>{{value.time}}</th>
+          <td>{{value.text}}</td>
+        </tr>
+      </table>
+      <a class="button" @click.prevent="gameStatus = 'result'" href="#">結果に戻る</a>
+
     </div>
   </div>
 
@@ -147,8 +150,9 @@
           }
           return point
         },
-        tweetText: function () {
-          return `${this.result.title} ${this.result.comment}`
+        url: function () {
+          const text = `${this.result.title} ${this.result.comment}`
+          return `https://twitter.com/intent/tweet?hashtags=ひきこもりのいちにち,web1week&url=https://aiandrox.github.io/hikikomori_oneday/&text=${text}`
         }
       },
       methods: {

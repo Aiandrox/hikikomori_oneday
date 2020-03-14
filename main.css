@@ -1,6 +1,13 @@
 body {
   background-color: #b5d197;
 }
+#app {
+  background-color: #ffffff;
+  padding: 20px;
+  max-width: 100%;
+  width: 500px;
+  margin: 20px auto;
+}
 a {
   text-decoration: none;
 }
@@ -16,12 +23,13 @@ h2 {
   font-weight: normal;
   margin: 0.3em 0;
 }
-.point {
+/* 下線 */
+span.point {
   padding: 0 0.1em;
   background: linear-gradient(transparent 80%, rgb(243, 144, 144) 70%);
 }
 
-/* インプットエリア */
+/* 入力フォーム */
 .input-area div {
   margin: 0.5em 0;
 }
@@ -76,14 +84,7 @@ input:focus {
   color: #B43C3C;
 }
 
-#app {
-  background-color: #ffffff;
-  padding: 20px;
-  max-width: 100%;
-  width: 500px;
-  margin: 20px auto;
-}
-/* ステータスエリア */
+/* ステータス */
 .wrapper {
   display: -webkit-flex;
   display: flex;
@@ -109,6 +110,26 @@ input:focus {
   background-color: cadetblue;
 }
 
+/* テーブル */
+table {
+  margin: 1em 0;
+  width: 100%;
+}
+tr {
+  margin: 1em;
+}
+th {
+  text-align: right;
+  padding: 0 0.5em;
+  max-width: 100px;
+  width: 20%;
+}
+td {
+  text-align: left;
+  padding: 0 0.5em;
+}
+
+/* 画像 */
 .img-area {
   margin: auto;
   max-width: 300px;
