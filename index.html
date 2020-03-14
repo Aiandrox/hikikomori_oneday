@@ -82,6 +82,7 @@
           <div class="comment">{{result.comment}}</div>
           <div>
             かしこさ: {{status.intelligence}}<br>
+            たくましさ: {{status.power}}<br>
             たのしさ: {{status.fun}}<br>
             活動時間: {{activityTime}}時間
           </div>
@@ -119,15 +120,17 @@
           satiety: 50,
           toilet: 50,
           intelligence: 20,
+          power: 10,
           fun: 0,
           sleep: 0,
         },
         actions: [
-          { text: 'ご飯を食べる', satiety: 100, toilet: 0, intelligence: 0, fun: 10, sleep: 0 },
-          { text: 'トイレに行く', satiety: 0, toilet: -100, intelligence: 0, fun: 0, sleep: 0 },
-          { text: '勉強する', satiety: 0, toilet: 0, intelligence: 13, fun: 5, sleep: 0 },
-          { text: 'ゲームする', satiety: 0, toilet: 0, intelligence: 5, fun: 10, sleep: 0 },
-          { text: '昼寝する', satiety: 0, toilet: 0, intelligence: 3, fun: 5, sleep: 1 },
+          { text: 'ご飯を食べる', satiety: 100, toilet: 0, intelligence: 0, power: 10, fun: 10, sleep: 0 },
+          { text: 'トイレに行く', satiety: 0, toilet: -100, intelligence: 0, power: 0, fun: 0, sleep: 0 },
+          { text: '勉強する', satiety: 0, toilet: 0, intelligence: 13, power: 0, fun: 5, sleep: 0 },
+          { text: 'ゲームする', satiety: 0, toilet: 0, intelligence: 5, power: 2, fun: 10, sleep: 0 },
+          { text: '筋トレする', satiety: -5, toilet: 0, intelligence: 5, power: 15, fun: 8, sleep: 1 },
+          { text: '昼寝する', satiety: 0, toilet: 0, intelligence: 3, power: 0, fun: 5, sleep: 1 },
         ],
         actionHistory: [],
         result: {
@@ -149,7 +152,7 @@
         },
         totalPoint: function () {
           const status = this.status
-          const point = Math.floor(status.satiety * 0.2 + status.intelligence + status.fun)
+          const point = Math.floor((status.satiety * 0.2 + status.intelligence + status.power + status.fun) * 0.9)
           if (this.activityTime > 15) {
             return Math.floor(point * 0.8)
           }
@@ -179,6 +182,7 @@
           this.status.satiety += action.satiety
           this.status.toilet += action.toilet
           this.status.intelligence += this.randNum(action.intelligence)
+          this.status.power += this.randNum(action.power)
           this.status.fun += this.randNum(action.fun)
           this.status.sleep += action.sleep
         },
@@ -208,6 +212,7 @@
           const numberOfToilet = this.number("トイレに行く")
           const numberOfStudy = this.number("勉強する")
           const numberOfGame = this.number("ゲームする")
+          const numberOfTraining = this.number("筋トレする")
           if (this.activityTime > 15) {
             comments.push("充実した１日でした。")
           } else if (this.status.sleep > 3) {
@@ -222,6 +227,9 @@
           }
           if (numberOfGame > 5) {
             comments.push("たくさんゲームをしました。")
+          }
+          if (numberOfTraining > 5) {
+            comments.push("筋トレが好きなのはわかりました。")
           }
           if (numberOfEat > 5) {
             comments.push("休日だからといって食べすぎです。")
