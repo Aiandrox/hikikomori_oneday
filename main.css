@@ -180,3 +180,20 @@ td {
   max-width: 300px;
   text-align: center;
 }
+
+/* スマホ向け */
+@media (max-width: 767px) { 
+#app {
+  width: 100%;
+  margin: 20px 0;
+}
+#main {
+  padding: 10px; 
+}
+#attention {
+  width: 100%;
+  font-size: 0.8em;
+  text-align: right;
+  margin-bottom: 20px;
+}
+}
