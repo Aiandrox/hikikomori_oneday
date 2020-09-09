@@ -1,12 +1,14 @@
 # ひきこもりのいちにち
 
-1 週間でwebサービスを作る web1week というオンラインハッカソンの提出作品です。
+育成ゲームのような何か。
 
 アプリページ↓  
 [ひきこもりのいちにち](https://aiandrox.github.io/hikikomori_oneday/)
 
 ![プレビュー](./preview.png)
 
+1週間でwebサービスを作るweb1weekというオンラインハッカソンの提出作品です。  
+テーマ「Home」
 
 ### 操作法
 
